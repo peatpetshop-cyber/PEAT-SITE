@@ -1,0 +1,101 @@
+[
+  {
+    "id": 1,
+    "titulo": "Luva Pet Nano Magnética Tira-Pelos",
+    "preco": 19.90,
+    "categoria": "Higiene e Cuidados",
+    "imagem": "https://images.pexels.com/photos/6816341/pexels-photo-6816341.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "descricao": "Luva de silicone massageadora que remove pelos mortos com facilidade enquanto relaxa o pet. Possui fecho ajustável em velcro.",
+    "estoque": 50,
+    "avaliacoes_count": 14,
+    "nota_media": 4.9
+  },
+  {
+    "id": 2,
+    "titulo": "Par de Luvas Mágicas de Silicone com Cerdas",
+    "preco": 29.90,
+    "categoria": "Higiene e Cuidados",
+    "imagem": "https://images.pexels.com/photos/6816851/pexels-photo-6816851.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "descricao": "Luvas multiuso 100% silicone para banho do pet, lavagem de utensílios e remoção de pelos. Resistente e higiênica.",
+    "estoque": 30,
+    "avaliacoes_count": 8,
+    "nota_media": 4.8
+  },
+  {
+    "id": 3,
+    "titulo": "Escova Rasqueadeira Autolimpante Pet",
+    "preco": 26.90,
+    "categoria": "Higiene e Cuidados",
+    "imagem": "https://images.pexels.com/photos/4587998/pexels-photo-4587998.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "descricao": "Escova tira-pelos com botão prático de autolimpeza. Remove os pelos retidos na ponta das cerdas com apenas um clique.",
+    "estoque": 40,
+    "avaliacoes_count": 19,
+    "nota_media": 5.0
+  },
+  {
+    "id": 4,
+    "titulo": "Máquina de Tosar Pet Profissional Sem Fio (4 Pentes)",
+    "preco": 69.90,
+    "categoria": "Equipamentos",
+    "imagem": "https://images.pexels.com/photos/7210754/pexels-photo-7210754.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "descricao": "Máquina de tosa silenciosa recarregável via USB. Acompanha 4 pentes de altura para diferentes tipos de pelagem.",
+    "estoque": 15,
+    "avaliacoes_count": 11,
+    "nota_media": 4.9
+  },
+  {
+    "id": 5,
+    "titulo": "Kit de Brinquedos Mordedores de Borracha para Cães",
+    "preco": 32.90,
+    "categoria": "Brinquedos",
+    "imagem": "https://images.pexels.com/photos/1909802/pexels-photo-1909802.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "descricao": "Kit variado com brinquedos mordedores de borracha atóxica. Auxilia na limpeza dos dentes e alívio do estresse.",
+    "estoque": 25,
+    "avaliacoes_count": 16,
+    "nota_media": 4.7
+  },
+  {
+    "id": 6,
+    "titulo": "Frisbee Interativo Disco Voador para Cachorro",
+    "preco": 14.90,
+    "categoria": "Brinquedos",
+    "imagem": "https://images.pexels.com/photos/4587941/pexels-photo-4587941.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "descricao": "Disco voador leve e resistente para brincadeiras de arremesso e busca ao ar livre. Estimula o exercício do cão.",
+    "estoque": 60,
+    "avaliacoes_count": 7,
+    "nota_media": 4.6
+  },
+  {
+    "id": 7,
+    "titulo": "Bola Interativa Automática com Cauda (Recarregável)",
+    "preco": 26.90,
+    "categoria": "Brinquedos",
+    "imagem": "https://images.pexels.com/photos/1056251/pexels-photo-1056251.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "descricao": "Bolinha inteligente com sensores anti-colisão e movimento de cauda automático. Recarregável via USB-C.",
+    "estoque": 35,
+    "avaliacoes_count": 22,
+    "nota_media": 4.9
+  },
+  {
+    "id": 8,
+    "titulo": "Tapete de Lamber de Silicone com Ventosas (Labirinto)",
+    "preco": 22.90,
+    "categoria": "Alimentação",
+    "imagem": "https://images.pexels.com/photos/7210271/pexels-photo-7210271.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "descricao": "Tapete interativo com ventosas para fixação em azulejos/pisos. Reduz a ansiedade e desacelera a alimentação.",
+    "estoque": 45,
+    "avaliacoes_count": 31,
+    "nota_media": 5.0
+  },
+  {
+    "id": 9,
+    "titulo": "Varinha Interativa de Pena com Ventosa para Gatos",
+    "preco": 19.90,
+    "categoria": "Brinquedos",
+    "imagem": "https://images.pexels.com/photos/1543793/pexels-photo-1543793.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "descricao": "Varinha com haste flexível e penas atóxicas. Base com ventosa forte para fixar no chão ou vidro e permitir brincadeira autônoma.",
+    "estoque": 50,
+    "avaliacoes_count": 13,
+    "nota_media": 4.8
+  }
+]

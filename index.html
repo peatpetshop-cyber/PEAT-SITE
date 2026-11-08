@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PEAT — Pet Shop Online Oficial | Produtos e Cuidados para seu Pet</title>
+  <meta name="description" content="O pet shop online oficial com produtos de higiene, equipamentos, brinquedos e alimentação com avaliações verificadas de tutores e entrega rápida." />
+
+  <!-- Favicon com Patinha -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+
+  <!-- Tailwind CSS via CDN com Cores Pet Personalizadas -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            pet: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Supabase JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Estilos Customizados de Pet Shop -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-[#fafaf9] text-stone-800 antialiased flex flex-col min-h-screen">
+
+  <!-- ==============================================================================
+       1. TOP BAR PROMOCIONAL PET
+       ============================================================================== -->
+  <div class="bg-amber-950 text-amber-200 text-xs py-2 px-4 text-center font-semibold">
+    <div class="container mx-auto flex items-center justify-center gap-2 flex-wrap">
+      <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+      <span>🐾 <strong>CUPOM ESPECIAL:</strong> Use <strong>PRIMEIRACOMPRA</strong> e ganhe 10% OFF + 5% extra no PIX!</span>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       2. CABEÇALHO / HEADER PET SHOP
+       ============================================================================== -->
+  <header class="sticky top-0 z-40 glass-header border-b border-stone-200/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20 gap-4">
+        
+        <!-- Logo PEAT Pet Shop -->
+        <a href="index.html" class="flex items-center gap-2.5 flex-shrink-0 group">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white shadow-md shadow-orange-200 group-hover:scale-105 transition-transform">
+            <i class="fa-solid fa-paw text-xl logo-paw"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-1">
+              <span class="text-2xl font-black tracking-tight text-stone-900 group-hover:text-orange-600 transition">PEAT</span>
+              <span class="text-[10px] uppercase font-black tracking-widest bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded-md">PET</span>
+            </div>
+            <p class="text-[10px] text-stone-400 font-bold uppercase tracking-wider -mt-0.5">Pet Shop & Care</p>
+          </div>
+        </a>
+
+        <!-- Barra de Busca Pet (Desktop & Tablet) -->
+        <div class="hidden sm:flex flex-1 max-w-lg mx-6">
+          <div class="relative w-full">
+            <input 
+              type="text" 
+              id="input-busca"
+              placeholder="Buscar luvas, escovas, máquinas, mordedores, brinquedos..." 
+              class="w-full bg-stone-100 border border-transparent focus:border-orange-500 focus:bg-white text-xs sm:text-sm text-stone-800 pl-10 pr-4 py-2.5 rounded-full outline-none transition"
+            />
+            <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none">
+              <i class="fa-solid fa-magnifying-glass text-xs"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ações do Header (Rastrear e Carrinho) -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- Botão Rastrear Pedido -->
+          <button 
+            type="button" 
+            onclick="abrirModalRastreio()"
+            class="hidden md:flex items-center gap-1.5 text-xs font-bold text-stone-600 hover:text-orange-600 px-3 py-2 rounded-xl hover:bg-orange-50 transition"
+            title="Acompanhar envio do pedido"
+          >
+            <i class="fa-solid fa-truck-fast text-sm text-orange-600"></i>
+            <span>Rastrear Pedido</span>
+          </button>
+
+          <!-- Botão Carrinho -->
+          <button 
+            type="button" 
+            onclick="window.Cart.abrirDrawer()"
+            class="relative flex items-center gap-2.5 bg-orange-600 hover:bg-orange-700 active:scale-95 text-white px-4 sm:px-5 py-2.5 rounded-full font-black text-xs sm:text-sm shadow-md shadow-orange-200 transition"
+            aria-label="Abrir Carrinho Pet"
+          >
+            <i class="fa-solid fa-basket-shopping text-sm"></i>
+            <span class="hidden md:inline">Carrinho</span>
+            
+            <span class="cart-badge-count bg-amber-400 text-amber-950 text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center -ml-1 border-2 border-orange-600 hidden">
+              0
+            </span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Barra de Busca Mobile -->
+      <div class="sm:hidden pb-3 flex items-center gap-2">
+        <div class="relative flex-1">
+          <input 
+            type="text" 
+            oninput="document.getElementById('input-busca').value = this.value; document.getElementById('input-busca').dispatchEvent(new Event('input'))"
+            placeholder="Buscar luva tira-pelos, escova..." 
+            class="w-full bg-stone-100 border border-stone-200 focus:border-orange-500 focus:bg-white text-xs text-stone-800 pl-9 pr-3 py-2 rounded-full outline-none transition"
+          />
+          <div class="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none">
+            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+          </div>
+        </div>
+        <button 
+          type="button" 
+          onclick="abrirModalRastreio()" 
+          class="bg-stone-100 text-stone-700 w-9 h-9 rounded-full flex items-center justify-center text-xs flex-shrink-0"
+          title="Rastrear Pedido"
+        >
+          <i class="fa-solid fa-truck-fast"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==============================================================================
+       3. HERO / BANNER DE DESTAQUE PET SHOP
+       ============================================================================== -->
+  <section class="relative bg-gradient-to-b from-orange-50/70 via-amber-50/30 to-transparent py-8 sm:py-12 border-b border-stone-200/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <div class="lg:col-span-7 space-y-4">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-100 text-orange-800 text-xs font-black">
+            <i class="fa-solid fa-star text-amber-500"></i>
+            Catálogo Oficial com Preços Competitivos
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-black text-stone-900 tracking-tight leading-tight">
+            Os Melhores Produtos para o Cuidado e Diversão do <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-600">Seu Pet</span>.
+          </h1>
+          <p class="text-stone-600 text-sm sm:text-base max-w-xl leading-relaxed">
+            Luvas tira-pelos, escovas autolimpantes, máquinas profissionais e brinquedos interativos com nota média de 4.9 estrelas avaliada por centenas de tutores.
+          </p>
+
+          <div class="pt-2 flex flex-wrap gap-3 text-xs font-bold text-stone-700">
+            <div class="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-stone-200/80 shadow-xs">
+              <i class="fa-solid fa-shield-cat text-emerald-600 text-sm"></i>
+              <span>Qualidade Garantida</span>
+            </div>
+            <div class="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-stone-200/80 shadow-xs">
+              <i class="fa-solid fa-star text-amber-500 text-sm"></i>
+              <span>Avaliações Reais de Tutores</span>
+            </div>
+            <div class="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-stone-200/80 shadow-xs">
+              <i class="fa-solid fa-truck-fast text-orange-600 text-sm"></i>
+              <span>Frete Correios / Melhor Envio</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 relative hidden lg:block">
+          <div class="w-full h-80 rounded-3xl overflow-hidden shadow-2xl relative border-4 border-white">
+            <img 
+              src="https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=800&q=80" 
+              alt="Pet Shop PEAT" 
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent flex items-end p-6">
+              <div class="text-white">
+                <span class="bg-orange-600 text-[10px] uppercase font-black px-2.5 py-0.5 rounded-full">Top Avaliado</span>
+                <h4 class="text-lg font-black mt-1">Cuidados Diários e Brinquedos Pet</h4>
+                <p class="text-xs text-orange-200 font-semibold">Nota 4.9 ★★★★★ com satisfação garantida</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       4. BARRA DE FILTROS & CATEGORIAS OFICIAIS
+       ============================================================================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-stone-200 pb-5">
+      
+      <!-- Pílulas de Categoria Oficiais -->
+      <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 scrollbar-none">
+        <button 
+          type="button" 
+          data-categoria="todos"
+          class="btn-categoria px-4 py-2 rounded-2xl text-xs font-black whitespace-nowrap bg-orange-600 text-white shadow-md shadow-orange-200 transition flex items-center gap-1.5"
+        >
+          <i class="fa-solid fa-paw"></i> Todos os Produtos
+        </button>
+        <button 
+          type="button" 
+          data-categoria="Higiene e Cuidados"
+          class="btn-categoria px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap bg-white text-stone-600 hover:text-orange-600 border border-stone-200 hover:border-orange-200 transition flex items-center gap-1.5"
+        >
+          <i class="fa-solid fa-bath text-sky-500"></i> Higiene e Cuidados
+        </button>
+        <button 
+          type="button" 
+          data-categoria="Brinquedos"
+          class="btn-categoria px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap bg-white text-stone-600 hover:text-orange-600 border border-stone-200 hover:border-orange-200 transition flex items-center gap-1.5"
+        >
+          <i class="fa-solid fa-bone text-rose-500"></i> Brinquedos
+        </button>
+        <button 
+          type="button" 
+          data-categoria="Equipamentos"
+          class="btn-categoria px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap bg-white text-stone-600 hover:text-orange-600 border border-stone-200 hover:border-orange-200 transition flex items-center gap-1.5"
+        >
+          <i class="fa-solid fa-scissors text-amber-600"></i> Equipamentos
+        </button>
+        <button 
+          type="button" 
+          data-categoria="Alimentação"
+          class="btn-categoria px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap bg-white text-stone-600 hover:text-orange-600 border border-stone-200 hover:border-orange-200 transition flex items-center gap-1.5"
+        >
+          <i class="fa-solid fa-bowl-food text-emerald-600"></i> Alimentação
+        </button>
+      </div>
+
+      <!-- Contador e Ordenação -->
+      <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto text-xs">
+        <span id="contador-produtos" class="text-stone-500 font-medium">Carregando catálogo...</span>
+        <div class="flex items-center gap-2">
+          <label for="select-ordem" class="text-stone-400 font-semibold hidden md:inline">Ordenar:</label>
+          <select 
+            id="select-ordem" 
+            class="bg-white border border-stone-200 text-stone-700 text-xs rounded-xl px-3 py-2 outline-none focus:border-orange-500 cursor-pointer font-bold"
+          >
+            <option value="relevancia">Mais Recomendados</option>
+            <option value="mais-avaliados">Mais Bem Avaliados (★)</option>
+            <option value="menor-preco">Menor Preço</option>
+            <option value="maior-preco">Maior Preço</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       5. VITRINE DE PRODUTOS OFICIAIS (GRID COM ESTRELAS E REVIEWS)
+       ============================================================================== -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 w-full">
+    <div id="grid-produtos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+      <!-- Cards de produtos gerados via app.js -->
+    </div>
+  </main>
+
+  <!-- ==============================================================================
+       6. MODAL DE DETALHES DO PRODUTO & SEÇÃO DE AVALIAÇÕES (REVIEWS)
+       ============================================================================== -->
+  <div id="modal-produto" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm overflow-y-auto">
+    <div class="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl p-6 sm:p-8 my-8 max-h-[92vh] overflow-y-auto animate-fade-in border border-stone-100">
+      
+      <button 
+        type="button" 
+        onclick="fecharModalProduto()" 
+        class="absolute top-5 right-5 w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center transition z-10"
+        title="Fechar"
+      >
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+
+      <div id="modal-produto-conteudo"></div>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       7. DRAWER LATERAL DO CARRINHO PET COM CUPOM DE DESCONTO
+       ============================================================================== -->
+  <div 
+    id="overlay-carrinho" 
+    onclick="window.Cart.fecharDrawer()"
+    class="fixed inset-0 z-50 bg-stone-900/50 backdrop-blur-xs transition-opacity hidden"
+  ></div>
+
+  <aside 
+    id="drawer-carrinho" 
+    class="fixed top-0 right-0 z-50 h-full w-full max-w-md bg-white shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out"
+  >
+    <!-- Topo do Carrinho -->
+    <div class="p-5 border-b border-stone-100 flex items-center justify-between bg-orange-50/50">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
+          <i class="fa-solid fa-basket-shopping text-base"></i>
+        </div>
+        <div>
+          <h3 class="font-black text-stone-800 text-base">Carrinho do Pet</h3>
+          <p class="text-[11px] text-stone-500 font-medium">Revise seus itens e calcule a entrega</p>
+        </div>
+      </div>
+      <button 
+        type="button" 
+        onclick="window.Cart.fecharDrawer()" 
+        class="w-8 h-8 rounded-full hover:bg-stone-200 text-stone-400 hover:text-stone-700 flex items-center justify-center transition"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Lista de Itens -->
+    <div id="carrinho-itens-lista" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+
+    <!-- Seção de Cupom de Desconto -->
+    <div id="carrinho-secao-cupom" class="px-4 py-3 border-t border-stone-100 bg-amber-50/40 hidden">
+      <label class="block text-xs font-bold text-stone-700 mb-1 flex items-center gap-1.5">
+        <i class="fa-solid fa-tag text-orange-600"></i> Possui Cupom de Desconto?
+      </label>
+      <div class="flex gap-2">
+        <input 
+          type="text" 
+          id="carrinho-cupom-input" 
+          placeholder="Ex: PRIMEIRACOMPRA" 
+          class="flex-1 bg-white border border-stone-200 text-xs rounded-xl px-3 py-2 outline-none focus:border-orange-500 uppercase font-mono"
+        />
+        <button 
+          type="button" 
+          id="btn-aplicar-cupom"
+          onclick="window.Cart.aplicarCupom(document.getElementById('carrinho-cupom-input').value)" 
+          class="bg-stone-800 hover:bg-orange-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition"
+        >
+          Aplicar
+        </button>
+      </div>
+      <div id="carrinho-badge-cupom" class="hidden"></div>
+    </div>
+
+    <!-- Cálculo de Frete -->
+    <div id="carrinho-secao-frete" class="p-4 border-t border-stone-100 bg-stone-50/80 hidden">
+      <label class="block text-xs font-bold text-stone-700 mb-1.5 flex items-center justify-between">
+        <span><i class="fa-solid fa-truck text-orange-600 mr-1"></i> Calcular Frete para seu Pet:</span>
+        <a href="https://buscacepinter.correios.com.br/app/endereco/index.php" target="_blank" class="text-[11px] text-orange-600 hover:underline">Não sei meu CEP</a>
+      </label>
+      <div class="flex gap-2 mb-2">
+        <input 
+          type="text" 
+          id="carrinho-cep-input" 
+          placeholder="00000-000" 
+          maxlength="9"
+          class="flex-1 bg-white border border-stone-200 text-xs rounded-xl px-3 py-2 outline-none focus:border-orange-500 font-mono"
+        />
+        <button 
+          type="button" 
+          id="btn-calcular-frete"
+          onclick="window.Cart.calcularFrete()" 
+          class="bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-xs"
+        >
+          Calcular
+        </button>
+      </div>
+
+      <div id="opcoes-frete-container" class="space-y-1.5 mt-2 hidden"></div>
+    </div>
+
+    <!-- Rodapé com Totais e Checkout -->
+    <div id="carrinho-footer" class="p-5 border-t border-stone-200 bg-white space-y-3 hidden">
+      <div class="space-y-1 text-xs">
+        <div class="flex justify-between text-stone-500">
+          <span>Subtotal dos produtos:</span>
+          <span id="carrinho-subtotal" class="font-bold text-stone-700">R$ 0,00</span>
+        </div>
+        <div id="carrinho-linha-desconto" class="flex justify-between text-emerald-600 font-bold hidden">
+          <span>Desconto Cupom:</span>
+          <span id="carrinho-desconto-valor">- R$ 0,00</span>
+        </div>
+        <div class="flex justify-between text-stone-500">
+          <span>Frete estimado:</span>
+          <span id="carrinho-frete-valor" class="font-bold text-stone-700">A calcular</span>
+        </div>
+        <div class="flex justify-between text-base font-black text-stone-900 pt-2 border-t border-stone-100">
+          <span>Total do Pedido:</span>
+          <span id="carrinho-total" class="text-orange-600">R$ 0,00</span>
+        </div>
+      </div>
+
+      <button 
+        type="button" 
+        onclick="window.Cart.finalizarCompra()"
+        class="w-full bg-orange-600 hover:bg-orange-700 active:scale-[0.98] text-white py-3.5 px-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-orange-200 transition"
+      >
+        <i class="fa-solid fa-lock text-xs"></i>
+        Finalizar Pedido do Pet
+      </button>
+      
+      <p class="text-[11px] text-center text-stone-400">
+        <i class="fa-solid fa-shield-halved text-emerald-500 mr-1"></i> Compra 100% Protegida & Criptografada
+      </p>
+    </div>
+  </aside>
+
+  <!-- ==============================================================================
+       8. MODAL DE RASTREAMENTO DE PEDIDOS
+       ============================================================================== -->
+  <div id="modal-rastreio" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm overflow-y-auto">
+    <div class="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl p-6 sm:p-8 my-8 border border-stone-100">
+      <button 
+        type="button" 
+        onclick="fecharModalRastreio()" 
+        class="absolute top-5 right-5 w-8 h-8 rounded-full hover:bg-stone-100 text-stone-400 hover:text-stone-700 flex items-center justify-center transition"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center">
+          <i class="fa-solid fa-truck-fast text-lg"></i>
+        </div>
+        <div>
+          <h3 class="font-black text-stone-900 text-lg">Rastrear Pedido do Pet</h3>
+          <p class="text-xs text-stone-500">Acompanhe o status e a entrega dos Correios</p>
+        </div>
+      </div>
+
+      <form onsubmit="event.preventDefault(); consultarRastreio();" class="space-y-4 mb-6">
+        <div>
+          <label class="block text-xs font-bold text-stone-600 mb-1">Número do Pedido ou CPF do Tutor</label>
+          <div class="flex gap-2">
+            <input 
+              type="text" 
+              id="input-rastreio-busca" 
+              required 
+              placeholder="Ex: PEAT-PET-123456" 
+              class="flex-1 bg-stone-50 border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:bg-white focus:border-orange-500 font-mono"
+            />
+            <button 
+              type="submit" 
+              id="btn-consultar-rastreio"
+              class="bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-xs"
+            >
+              Consultar
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Resultado da Consulta -->
+      <div id="resultado-rastreio" class="space-y-4 hidden">
+        <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs text-stone-500">Pedido: <strong id="rastreio-num-pedido" class="text-stone-800"></strong></span>
+            <span id="rastreio-status-badge" class="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800"></span>
+          </div>
+
+          <!-- Linha do Tempo Visual -->
+          <div class="space-y-3 pt-3 border-t border-stone-200 text-xs">
+            <div class="flex items-center gap-3 text-emerald-600 font-bold">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>1. Pedido Criado com Sucesso</span>
+            </div>
+            <div class="flex items-center gap-3 text-emerald-600 font-bold">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>2. Pagamento Confirmado</span>
+            </div>
+            <div class="flex items-center gap-3 text-orange-600 font-bold">
+              <i class="fa-solid fa-box-open"></i>
+              <span>3. Embalado com carinho no Centro de Distribuição</span>
+            </div>
+            <div class="flex items-center gap-3 text-stone-400">
+              <i class="fa-regular fa-circle"></i>
+              <span>4. Em Trânsito pelos Correios (Sedex / PAC)</span>
+            </div>
+            <div class="flex items-center gap-3 text-stone-400">
+              <i class="fa-regular fa-circle"></i>
+              <span>5. Entregue no Endereço do Pet</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       9. MODAL DE CHECKOUT PET
+       ============================================================================== -->
+  <div id="modal-checkout" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm overflow-y-auto">
+    <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-6 sm:p-8 my-8 max-h-[92vh] overflow-y-auto border border-stone-100">
+      
+      <div class="flex items-center justify-between pb-4 mb-6 border-b border-stone-100">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center">
+            <i class="fa-solid fa-paw text-lg"></i>
+          </div>
+          <div>
+            <h3 class="font-black text-stone-900 text-lg">Finalizar Compra Pet</h3>
+            <p class="text-xs text-stone-500">Dados de entrega para o conforto do seu pet</p>
+          </div>
+        </div>
+        <button 
+          type="button" 
+          onclick="window.Checkout.fecharModal()" 
+          class="w-8 h-8 rounded-full hover:bg-stone-100 text-stone-400 hover:text-stone-700 flex items-center justify-center transition"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="form-checkout" onsubmit="event.preventDefault(); window.Checkout.processarPagamento();" class="space-y-6">
+        <!-- 1. Dados do Tutor -->
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-orange-700 mb-3 flex items-center gap-1.5">
+            <i class="fa-solid fa-user text-xs"></i> 1. Dados do Tutor
+          </h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-stone-600 mb-1">Nome Completo *</label>
+              <input 
+                type="text" 
+                id="checkout-nome" 
+                required 
+                placeholder="Ex: Amanda Souza"
+                class="w-full bg-stone-50 border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:bg-white focus:border-orange-500 transition"
+              />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-stone-600 mb-1">E-mail para Rastreio *</label>
+              <input 
+                type="email" 
+                id="checkout-email" 
+                required 
+                placeholder="seuemail@exemplo.com"
+                class="w-full bg-stone-50 border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:bg-white focus:border-orange-500 transition"
+              />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-stone-600 mb-1">CPF (apenas números) *</label>
+              <input 
+                type="text" 
+                id="checkout-cpf" 
+                required 
+                placeholder="000.000.000-00"
+                maxlength="14"
+                class="w-full bg-stone-50 border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:bg-white focus:border-orange-500 transition font-mono"
+              />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-stone-600 mb-1">WhatsApp / Telefone</label>
+              <input 
+                type="tel" 
+                id="checkout-telefone" 
+                placeholder="(11) 9999-9999"
+                maxlength="15"
+                class="w-full bg-stone-50 border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:bg-white focus:border-orange-500 transition font-mono"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Endereço de Entrega -->
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-orange-700 mb-3 flex items-center gap-1.5">
+            <i class="fa-solid fa-location-dot text-xs"></i> 2. Endereço de Entrega
+          </h4>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-stone-600 mb-1">CEP *</label>
+              <input 
+                type="text" 
+                id="checkout-cep" 
+                required 
+                placeholder="00000-000"
+                maxlength="9"
+                class="w-full bg-stone-50 border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:bg-white focus:border-orange-500 transition font-mono"
+              />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-[11px] font-semibold text-stone-600 mb-1">Logradouro / Rua *</label>
+              <input 
+                type="text" 
+                id="checkout-rua" 
+                required 
+                placeholder="Rua dos Pets"
+                class="w-full bg-stone-50 border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:bg-white focus:border-orange-500 transition"
+              />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-stone-600 mb-1">Número *</label>
+              <input 
+                type="text" 
+                id="checkout-numero" 
+                required 
+                placeholder="123"
+                class="w-full bg-stone-50 border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:bg-white focus:border-orange-500 transition"
+              />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-stone-600 mb-1">Complemento</label>
+              <input 
+                type="text" 
+                id="checkout-complemento" 
+                placeholder="Apto 101"
+                class="w-full bg-stone-50 border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:bg-white focus:border-orange-500 transition"
+              />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-stone-600 mb-1">Bairro *</label>
+              <input 
+                type="text" 
+                id="checkout-bairro" 
+                required 
+                placeholder="Jardim América"
+                class="w-full bg-stone-50 border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:bg-white focus:border-orange-500 transition"
+              />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-[11px] font-semibold text-stone-600 mb-1">Cidade *</label>
+              <input 
+                type="text" 
+                id="checkout-cidade" 
+                required 
+                placeholder="São Paulo"
+                class="w-full bg-stone-50 border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:bg-white focus:border-orange-500 transition"
+              />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-stone-600 mb-1">Estado (UF) *</label>
+              <input 
+                type="text" 
+                id="checkout-uf" 
+                required 
+                placeholder="SP" 
+                maxlength="2"
+                class="w-full bg-stone-50 border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:bg-white focus:border-orange-500 transition uppercase font-mono"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Pagamento -->
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-orange-700 mb-3 flex items-center gap-1.5">
+            <i class="fa-solid fa-wallet text-xs"></i> 3. Forma de Pagamento
+          </h4>
+
+          <div class="flex gap-2 mb-4">
+            <button 
+              type="button" 
+              id="tab-btn-pix" 
+              class="flex-1 py-3 px-4 rounded-2xl font-black text-xs flex items-center justify-center gap-2 border transition border-emerald-500 bg-emerald-50 text-emerald-800 shadow-xs"
+            >
+              <i class="fa-brands fa-pix text-emerald-600 text-base"></i>
+              <span>PIX Instantâneo (-5% OFF)</span>
+            </button>
+            <button 
+              type="button" 
+              id="tab-btn-cartao" 
+              class="flex-1 py-3 px-4 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 border transition border-stone-200 text-stone-600 hover:bg-stone-50"
+            >
+              <i class="fa-regular fa-credit-card text-base"></i>
+              <span>Cartão de Crédito</span>
+            </button>
+          </div>
+
+          <div id="painel-pagamento-pix" class="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-4 text-xs text-stone-700">
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 text-base">
+                <i class="fa-solid fa-bolt"></i>
+              </div>
+              <div class="space-y-1">
+                <p class="font-black text-emerald-950">Aprovação Imediata no Mercado Pago</p>
+                <p class="text-[11px] text-emerald-900 leading-relaxed">
+                  Geramos o QR Code e a chave Copia e Cola na hora para o seu banco.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div id="painel-pagamento-cartao" class="bg-stone-50 border border-stone-200 rounded-2xl p-4 space-y-3 hidden">
+            <div>
+              <label class="block text-[11px] font-semibold text-stone-600 mb-1">Número do Cartão *</label>
+              <div class="relative">
+                <input 
+                  type="text" 
+                  id="cartao-numero" 
+                  placeholder="0000 0000 0000 0000"
+                  maxlength="19"
+                  class="w-full bg-white border border-stone-200 text-xs rounded-xl pl-3.5 pr-10 py-2.5 outline-none focus:border-orange-500 transition font-mono"
+                />
+                <div class="absolute right-3 top-1/2 -translate-y-1/2">
+                  <i id="icone-bandeira-cartao" class="fa-regular fa-credit-card text-stone-400 text-lg"></i>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-stone-600 mb-1">Nome Impresso no Cartão *</label>
+              <input 
+                type="text" 
+                id="cartao-nome" 
+                placeholder="Como gravado no cartão"
+                class="w-full bg-white border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:border-orange-500 transition uppercase"
+              />
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-stone-600 mb-1">Validade (MM/AA) *</label>
+                <input 
+                  type="text" 
+                  id="cartao-validade" 
+                  placeholder="MM/AA"
+                  maxlength="5"
+                  class="w-full bg-white border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:border-orange-500 transition font-mono"
+                />
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-stone-600 mb-1">CVV *</label>
+                <input 
+                  type="password" 
+                  id="cartao-cvv" 
+                  placeholder="123"
+                  maxlength="4"
+                  class="w-full bg-white border border-stone-200 text-xs rounded-xl px-3.5 py-2.5 outline-none focus:border-orange-500 transition font-mono"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-stone-600 mb-1">Parcelamento *</label>
+              <select 
+                id="cartao-parcelas"
+                class="w-full bg-white border border-stone-200 text-xs rounded-xl px-3 py-2.5 outline-none focus:border-orange-500 transition cursor-pointer"
+              ></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumo e Confirmar -->
+        <div class="border-t border-stone-200 pt-4 space-y-3">
+          <div id="checkout-resumo-itens" class="max-h-24 overflow-y-auto space-y-1"></div>
+          
+          <div class="flex justify-between text-xs text-stone-600">
+            <span>Subtotal:</span>
+            <span id="checkout-subtotal" class="font-bold">R$ 0,00</span>
+          </div>
+          <div id="checkout-linha-desconto" class="flex justify-between text-xs text-emerald-600 font-bold hidden">
+            <span>Desconto Aplicado:</span>
+            <span id="checkout-desconto">- R$ 0,00</span>
+          </div>
+          <div class="flex justify-between text-xs text-stone-600">
+            <span>Frete para o pet:</span>
+            <span id="checkout-frete" class="font-bold">A calcular</span>
+          </div>
+          <div class="flex justify-between text-base font-black text-stone-900 border-t border-stone-100 pt-2">
+            <span>Total da Compra:</span>
+            <span id="checkout-total" class="text-orange-600 text-lg">R$ 0,00</span>
+          </div>
+
+          <button 
+            type="submit" 
+            id="btn-finalizar-pedido"
+            class="w-full bg-orange-600 hover:bg-orange-700 active:scale-[0.98] text-white py-4 px-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-orange-200 transition"
+          >
+            <i class="fa-solid fa-paw text-sm"></i>
+            Confirmar Pedido e Pagar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       10. MODAL PIX (COM QR CODE MERCADO PAGO)
+       ============================================================================== -->
+  <div id="modal-pix" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm overflow-y-auto">
+    <div class="relative w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 sm:p-8 text-center animate-fade-in border border-stone-100">
+      
+      <button 
+        type="button" 
+        onclick="window.Checkout.fecharModalPix()" 
+        class="absolute top-5 right-5 w-8 h-8 rounded-full hover:bg-stone-100 text-stone-400 hover:text-stone-700 flex items-center justify-center transition"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-800 text-xs font-black mb-3">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 pix-pulse"></span>
+        Aguardando Pagamento do Pet
+      </div>
+
+      <h3 class="text-xl font-black text-stone-900 mb-1">Pague com PIX</h3>
+      <p class="text-xs text-stone-500 mb-4">
+        Pedido <span id="pix-numero-pedido" class="font-mono font-bold text-stone-800">#000000</span>
+      </p>
+
+      <div class="w-60 h-60 mx-auto p-3 bg-white rounded-2xl border-2 border-orange-100 shadow-sm flex items-center justify-center mb-4">
+        <img id="pix-qr-img" src="" alt="QR Code Pix Pet" class="w-full h-full object-contain" />
+      </div>
+
+      <div class="flex items-center justify-between bg-stone-50 p-3.5 rounded-2xl mb-4 text-xs font-bold">
+        <span class="text-stone-500">Valor Total com Desconto:</span>
+        <span id="pix-valor-total" class="text-sm font-black text-emerald-600">R$ 0,00</span>
+      </div>
+
+      <div class="flex items-center justify-center gap-1.5 text-xs text-amber-600 font-bold mb-4">
+        <i class="fa-regular fa-clock"></i>
+        <span>Expira em: <strong id="pix-timer" class="font-mono">30:00</strong></span>
+      </div>
+
+      <div class="space-y-2 mb-6">
+        <label class="block text-[11px] font-bold text-stone-500 text-left">Código Pix Copia e Cola:</label>
+        <div class="relative">
+          <input 
+            type="text" 
+            id="pix-copia-cola" 
+            readonly 
+            class="w-full bg-stone-50 border border-stone-200 text-xs rounded-xl px-3 py-2.5 text-stone-600 font-mono pr-10 outline-none select-all"
+          />
+        </div>
+        <button 
+          type="button" 
+          id="btn-copiar-pix"
+          onclick="window.Checkout.copiarCodigoPix()"
+          class="w-full bg-orange-600 hover:bg-orange-700 active:scale-98 text-white text-xs font-black py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-orange-100"
+        >
+          <i class="fa-regular fa-copy"></i>
+          Copiar Código PIX
+        </button>
+      </div>
+
+      <p class="text-[11px] text-stone-400 leading-relaxed">
+        Assim que o banco confirmar, seu pedido será processado no Supabase para envio!
+      </p>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       11. MODAL DE SUCESSO DO PEDIDO PET
+       ============================================================================== -->
+  <div id="modal-sucesso" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm">
+    <div class="relative w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 sm:p-8 text-center animate-fade-in border border-stone-100">
+      <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-2xl mb-4">
+        <i class="fa-solid fa-paw"></i>
+      </div>
+
+      <h3 class="text-xl font-black text-stone-900 mb-2">Pedido do Pet Confirmado!</h3>
+      <p id="sucesso-mensagem" class="text-xs text-stone-600 mb-4 leading-relaxed">
+        Seu pedido foi registrado com sucesso. Já estamos separando os mimos do seu companheiro!
+      </p>
+
+      <div class="bg-stone-50 p-3.5 rounded-2xl mb-6 text-xs text-stone-600 font-medium">
+        Número do Pedido: <span id="sucesso-numero-pedido" class="font-black text-orange-600 font-mono">#000000</span>
+      </div>
+
+      <button 
+        type="button" 
+        onclick="window.Checkout.fecharModalSucesso(); window.location.reload();"
+        class="w-full bg-orange-600 hover:bg-orange-700 text-white font-black py-3.5 rounded-2xl text-xs transition shadow-md shadow-orange-200"
+      >
+        Continuar Comprando na PEAT
+      </button>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       12. WIDGET FLUTUANTE DE WHATSAPP (ATENDIMENTO RÁPIDO)
+       ============================================================================== -->
+  <div class="whatsapp-float">
+    <a 
+      href="https://wa.me/5511924699083?text=Ol%C3%A1!%20Tenho%20uma%20d%C3%BAvida%20sobre%20os%20produtos%20da%20PEAT%20Pet%20Shop." 
+      target="_blank"
+      class="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-3 rounded-full font-bold text-xs shadow-xl shadow-emerald-500/20 transition group"
+      aria-label="Atendimento via WhatsApp"
+    >
+      <i class="fa-brands fa-whatsapp text-lg"></i>
+      <span class="hidden sm:inline">Dúvidas? Fale Conosco</span>
+    </a>
+  </div>
+
+  <!-- ==============================================================================
+       13. RODAPÉ / FOOTER PET SHOP
+       ============================================================================== -->
+  <footer class="bg-stone-900 text-stone-400 text-xs pt-14 pb-8 border-t border-stone-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-stone-800">
+        
+        <!-- Coluna 1: Sobre a PEAT Pet -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-9 h-9 rounded-xl bg-orange-600 flex items-center justify-center text-white font-bold">
+              <i class="fa-solid fa-paw text-base"></i>
+            </div>
+            <span class="text-lg font-black text-white tracking-wider">PEAT PET SHOP</span>
+          </div>
+          <p class="text-stone-400 text-[11px] leading-relaxed">
+            Catálogo oficial com produtos testados e aprovados para a higiene, saúde e felicidade de cães e gatos.
+          </p>
+        </div>
+
+        <!-- Coluna 2: Navegação Pet -->
+        <div>
+          <h5 class="text-white font-black mb-3 text-xs uppercase tracking-wider">Categorias Oficiais</h5>
+          <ul class="space-y-2 text-[11px]">
+            <li><a href="#" onclick="limparFiltros()" class="hover:text-orange-400 transition">Todos os Produtos</a></li>
+            <li><a href="#" class="hover:text-orange-400 transition">Higiene e Cuidados</a></li>
+            <li><a href="#" class="hover:text-orange-400 transition">Brinquedos Interativos</a></li>
+            <li><a href="#" class="hover:text-orange-400 transition">Equipamentos de Tosa</a></li>
+            <li><a href="#" class="hover:text-orange-400 transition">Alimentação e Bem-Estar</a></li>
+          </ul>
+        </div>
+
+        <!-- Coluna 3: Pagamentos -->
+        <div>
+          <h5 class="text-white font-black mb-3 text-xs uppercase tracking-wider">Formas de Pagamento</h5>
+          <div class="flex flex-wrap gap-2 text-xl text-stone-300">
+            <i class="fa-brands fa-pix text-emerald-400" title="PIX Mercado Pago"></i>
+            <i class="fa-brands fa-cc-visa" title="Visa"></i>
+            <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+            <i class="fa-brands fa-cc-amex" title="American Express"></i>
+          </div>
+          <p class="text-[10px] text-stone-500 mt-2">Processamento instantâneo via Mercado Pago.</p>
+        </div>
+
+        <!-- Coluna 4: Entrega & Segurança -->
+        <div>
+          <h5 class="text-white font-black mb-3 text-xs uppercase tracking-wider">Entrega & Segurança</h5>
+          <div class="space-y-2 text-[11px] text-stone-400">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-truck-fast text-orange-400"></i>
+              <span>Frete Correios / Melhor Envio</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-star text-amber-400"></i>
+              <span>Avaliações Verificadas de Clientes</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-database text-sky-400"></i>
+              <span>Dados protegidos no Supabase</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Copyright -->
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] text-stone-500 gap-2">
+        <p>&copy; 2026 PEAT Pet Shop. Todos os direitos reservados. Feito com amor para pets.</p>
+        <p>Hospedado na Vercel com Banco de Dados Supabase.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts da Loja Pet -->
+  <script src="js/app.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>

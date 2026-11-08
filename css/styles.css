@@ -1,0 +1,198 @@
+/* ==============================================================================
+   PEAT PET SHOP - ESTILOS CUSTOMIZADOS, AVALIAÇÕES & ANIMAÇÕES
+   ============================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --pet-orange: #ea580c;
+  --pet-orange-hover: #c2410c;
+  --pet-teal: #0d9488;
+  --pet-amber: #f59e0b;
+  --pet-surface: #ffffff;
+  --pet-background: #fafaf9;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--pet-background);
+  color: #292524;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Scrollbar estilizada */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f5f5f4;
+}
+::-webkit-scrollbar-thumb {
+  background: #d6d3d1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a29e;
+}
+
+/* Transições e Hover nos Cards */
+.product-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.2s ease;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 30px -10px rgba(234, 88, 12, 0.12);
+  border-color: #fed7aa;
+}
+.product-card .product-img {
+  transition: transform 0.5s ease;
+}
+.product-card:hover .product-img {
+  transform: scale(1.06);
+}
+
+/* Balanço charmoso do logo */
+@keyframes pawWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+.logo-paw:hover {
+  animation: pawWiggle 0.5s ease-in-out infinite;
+}
+
+/* Animações de Entrada */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideLeft {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes popScale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-slide-left {
+  animation: slideLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-badge-pop {
+  animation: popScale 0.3s ease-in-out;
+}
+
+/* Shimmer de Carregamento (Skeleton) */
+.skeleton {
+  background: linear-gradient(90deg, #f5f5f4 25%, #e7e5e4 50%, #f5f5f4 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Glassmorphism do Header */
+.glass-header {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Opções de Frete */
+.shipping-option {
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.shipping-option:hover {
+  border-color: #ea580c;
+}
+.shipping-option.selected {
+  border-color: #ea580c;
+  background-color: #fff7ed;
+}
+
+/* Indicador de Status PIX */
+.pix-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ==============================================================================
+   ESTILOS DO SISTEMA DE AVALIAÇÕES (REVIEWS)
+   ============================================================================== */
+.star-rating-select i {
+  cursor: pointer;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+.star-rating-select i:hover {
+  transform: scale(1.25);
+}
+
+.review-card {
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.review-card:hover {
+  background-color: #ffffff;
+  border-color: #fed7aa;
+}
+
+/* ==============================================================================
+   WIDGET FLUTUANTE DE WHATSAPP
+   ============================================================================== */
+.whatsapp-float {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.whatsapp-float:hover {
+  transform: translateY(-3px) scale(1.02);
+}
+
+/* Linha do tempo de rastreamento de pedidos */
+.timeline-step.active .timeline-dot {
+  background-color: #ea580c;
+  border-color: #ea580c;
+  color: #ffffff;
+}
+.timeline-step.completed .timeline-dot {
+  background-color: #10b981;
+  border-color: #10b981;
+  color: #ffffff;
+}
+.timeline-step.completed .timeline-line {
+  background-color: #10b981;
+}
+
+/* Toast Container */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+.toast-item {
+  pointer-events: auto;
+  box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}

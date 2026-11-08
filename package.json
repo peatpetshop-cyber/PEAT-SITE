@@ -1,0 +1,24 @@
+{
+  "name": "peat-ecommerce-store",
+  "version": "1.0.0",
+  "description": "E-commerce Full-Stack moderno, responsivo e gratuito com Vercel, Supabase, Mercado Pago e Melhor Envio",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "ecommerce",
+    "supabase",
+    "mercadopago",
+    "melhorenvio",
+    "vercel",
+    "pix",
+    "tailwind"
+  ],
+  "author": "Peat Store",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.8"
+  }
+}
